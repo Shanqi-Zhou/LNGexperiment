@@ -1,0 +1,68 @@
+# 开发调试优化配置
+# 用于开发阶段的快速迭代和调试
+
+model:
+  type: "debug"
+  primary_model: "mlr"  # 最快的基线模型
+  
+  mlr:
+    fit_intercept: true
+    copy_X: true
+
+training:
+  # 快速训练设置
+  batch_size: 16
+  learning_rate: 1e-2  # 更高学习率加快收敛
+  max_epochs: 10  # 快速验证
+  early_stopping_patience: 3
+  validation_split: 0.3
+  
+  # 调试设置
+  debug_mode: true
+  verbose_training: true
+  save_intermediate_results: true
+
+preprocessing:
+  # 最小预处理
+  normalization: "standard"
+  outlier_removal: false
+  missing_value_strategy: "mean"
+
+features:
+  # 最小特征集
+  vt_features:
+    window_sizes: [60]
+    statistical_features: true
+    frequency_features: false
+  
+  vs_features:
+    context_features: true
+    time_encoding: false
+
+data:
+  # 小数据集用于快速测试
+  max_samples: 1000
+  use_synthetic_data: true
+  synthetic_complexity: "simple"
+
+performance_targets:
+  # 宽松目标
+  min_r2_score: 0.5
+  max_training_time_seconds: 30
+
+monitoring:
+  system_monitoring: false
+  memory_profiling: false
+  
+debugging:
+  # 调试功能
+  step_by_step_execution: true
+  intermediate_outputs: true
+  error_details: "verbose"
+  breakpoint_on_error: true
+
+logging:
+  level: "DEBUG"
+  console_output: true
+  log_file: "logs/debug.log"
+  log_every_batch: true
