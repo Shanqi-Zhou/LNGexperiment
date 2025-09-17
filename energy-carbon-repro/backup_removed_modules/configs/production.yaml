@@ -1,0 +1,116 @@
+# LNG项目优化器配置文件
+# 企业级生产环境配置
+
+# 优化配置
+optimization:
+  # Hampel异常检测配置
+  hampel_window: 15
+  hampel_sigma: 3.0
+  use_adaptive_hampel: true
+
+  # 生产级GPR配置
+  gpr_auto_tune: true
+  gpr_validation_split: 0.2
+
+  # 特征提取配置
+  feature_window_size: 180
+  feature_stride: 30
+
+  # 缓存配置
+  enable_caching: true
+  cache_dir: "cache/production"
+  cache_max_size_gb: 4.0
+
+  # 并行处理配置
+  enable_parallel: true
+  max_workers: null  # 自动检测
+
+  # 输出配置
+  output_dir: "results/production"
+
+# 验证配置
+validation:
+  target_metrics:
+    r2_min: 0.75              # R²最小值
+    cv_rmse_max: 0.06         # CV(RMSE)最大值 (6%)
+    nmbe_max: 0.006           # NMBE最大值 (0.6%)
+    mae_max_percent: 5.0      # MAE最大百分比 (5%)
+    inference_time_per_sample_ms: 10.0  # 推理时间/样本 (10ms)
+
+  # 验证模式配置
+  enable_cross_validation: true
+  cross_validation_folds: 5
+  enable_stability_check: true
+  enable_resource_validation: true
+  enable_edge_case_testing: true
+
+# 基准测试配置
+benchmark:
+  test_data_sizes: [1000, 2000, 5000, 10000, 20000]
+  n_runs: 5  # 每个测试运行次数
+  enable_visualization: true
+  save_detailed_results: true
+
+  # 对比模式
+  baseline_method: "single_threaded"
+  optimized_method: "full_optimization"
+
+# 资源监控配置
+monitoring:
+  enable_resource_monitoring: true
+  monitoring_interval: 0.5  # 秒
+  memory_threshold_percent: 85
+  cpu_threshold_percent: 90
+  enable_alerts: true
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  save_logs: true
+  log_dir: "logs"
+  max_log_files: 10
+  log_file_max_size_mb: 50
+
+  # 日志格式
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+# 数据处理配置
+data_processing:
+  # 数据加载配置
+  chunk_size: 10000
+  parse_dates_columns: ["ts"]
+
+  # 数据清理配置
+  handle_missing_values: true
+  missing_value_strategy: "interpolate"
+
+  # 特征工程配置
+  enable_feature_selection: false
+  feature_importance_threshold: 0.01
+
+# 模型配置
+model:
+  # GPR具体配置
+  kernel_type: "adaptive"  # adaptive, matern, rbf
+  alpha: 1e-10
+  n_restarts_optimizer: 5
+
+  # 训练配置
+  validation_split: 0.2
+  random_state: 42
+
+# 部署配置
+deployment:
+  # 生产环境配置
+  environment: "production"
+  enable_api_server: false
+  api_port: 8080
+
+  # 安全配置
+  enable_input_validation: true
+  max_data_size_mb: 1000
+
+  # 性能配置
+  enable_warm_up: true
+  warm_up_samples: 1000

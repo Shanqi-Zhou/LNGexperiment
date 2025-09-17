@@ -1,0 +1,35 @@
+# 仿真控制参数
+sim_control:
+  sim_days: 180
+  dt_s: 1
+  log_interval_s: 10
+
+# 设备物理参数 (来自 `论文复现技术路线.md`)
+device_params:
+  tank:
+    volume_m3: 1600
+    initial_level_pct: 0.8
+    ua_W_K: 85.0
+    latent_heat_J_kg: 5.05e5
+    lng_density_kg_m3: 450.0
+  pumps:
+    booster_rated_power_kW: 220
+    hp_rated_power_kW: 1200
+    # 假设一个最大流量用于效率曲线计算
+    max_flow_m3h: 2500 
+    min_efficiency: 0.65
+    max_efficiency: 0.80
+  orv:
+    ua_W_K: 4.0e6
+    fouling_decay_beta: 3.0e-6
+  bog_compressor:
+    num_stages: 2
+    pressure_ratio_per_stage: 2.2
+    isentropic_efficiency: 0.72
+  recondenser:
+    max_capacity_tph: 8.0
+
+# 事件与故障注入
+events:
+  fault_days: [60, 120, 160]
+  # 对应故障的参数，例如 orv_beta_multiplier, pump_power_increase_factor

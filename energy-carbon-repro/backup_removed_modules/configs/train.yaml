@@ -1,0 +1,52 @@
+# 数据处理与特征工程
+data_processing:
+  window_size: 180 # 30分钟窗口 (180 * 10s)
+  stride: 30       # 5分钟步长 (30 * 10s)
+
+# 模型选择策略
+model_selection:
+  small_sample_threshold: 20000
+  medium_sample_threshold: 100000
+
+# 各模型超参数
+model_params:
+  mlr:
+    alpha: 1.0 # Ridge回归正则化强度
+  hgbr:
+    max_iter: 500
+    learning_rate: 0.05
+    max_bins: 255
+  gpr:
+    n_restarts_optimizer: 8
+  tcn_attention: # 深度模型
+    d_model: 128
+    n_heads: 4
+    n_layers: 3
+    ffn_dim: 256
+    dropout: 0.1
+
+# PyTorch模型训练参数
+training_loop:
+  epochs: 50
+  batch_size: 64
+  optimizer: AdamW
+  learning_rate: 0.0001
+  max_lr: 0.001 # for OneCycleLR
+  weight_decay: 0.01
+  gradient_clip: 1.0
+  pct_start: 0.1 # for OneCycleLR
+
+# 交叉验证
+validation:
+  method: PurgedWalkForwardCV
+  n_splits: 5
+  embargo_size: 100
+
+# 评估
+evaluation:
+  confidence_levels: [0.90, 0.95]
+  kpi_targets:
+    r2_min: 0.75
+    cv_rmse_max: 0.06
+    nmbe_range: [-0.006, 0.006]
+    picp_90_range: [0.85, 0.95]

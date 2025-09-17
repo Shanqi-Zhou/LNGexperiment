@@ -1,0 +1,91 @@
+# LNG项目优化器配置文件
+# 开发测试环境配置
+
+# 优化配置
+optimization:
+  # Hampel异常检测配置
+  hampel_window: 11
+  hampel_sigma: 2.5
+  use_adaptive_hampel: true
+
+  # GPR配置（较宽松的参数用于快速测试）
+  gpr_auto_tune: false
+  gpr_validation_split: 0.3
+
+  # 特征提取配置（较小窗口用于快速测试）
+  feature_window_size: 120
+  feature_stride: 20
+
+  # 缓存配置
+  enable_caching: true
+  cache_dir: "cache/development"
+  cache_max_size_gb: 1.0
+
+  # 并行处理配置
+  enable_parallel: true
+  max_workers: 2  # 限制并发用于开发
+
+  # 输出配置
+  output_dir: "results/development"
+
+# 验证配置（较宽松的标准用于开发）
+validation:
+  target_metrics:
+    r2_min: 0.65              # 开发环境R²标准
+    cv_rmse_max: 0.08         # CV(RMSE)标准 (8%)
+    nmbe_max: 0.01            # NMBE标准 (1%)
+    mae_max_percent: 8.0      # MAE标准 (8%)
+    inference_time_per_sample_ms: 50.0  # 推理时间标准 (50ms)
+
+  # 验证模式配置
+  enable_cross_validation: false  # 开发时跳过交叉验证
+  cross_validation_folds: 3
+  enable_stability_check: true
+  enable_resource_validation: false  # 开发时跳过资源验证
+  enable_edge_case_testing: true
+
+# 基准测试配置
+benchmark:
+  test_data_sizes: [500, 1000, 2000]  # 较小的测试集
+  n_runs: 2  # 减少运行次数
+  enable_visualization: false  # 开发时跳过可视化
+  save_detailed_results: true
+
+# 资源监控配置
+monitoring:
+  enable_resource_monitoring: true
+  monitoring_interval: 1.0  # 秒
+  memory_threshold_percent: 80
+  cpu_threshold_percent: 85
+  enable_alerts: false  # 开发时关闭警告
+
+# 日志配置
+logging:
+  level: "DEBUG"  # 开发时使用DEBUG级别
+  save_logs: true
+  log_dir: "logs/development"
+  max_log_files: 5
+  log_file_max_size_mb: 10
+
+# 数据处理配置
+data_processing:
+  chunk_size: 5000  # 较小的块大小
+  parse_dates_columns: ["ts"]
+  handle_missing_values: true
+  missing_value_strategy: "forward_fill"
+  enable_feature_selection: false
+
+# 模型配置
+model:
+  kernel_type: "matern"  # 固定核类型用于开发
+  alpha: 1e-8
+  n_restarts_optimizer: 2  # 减少重启次数
+  validation_split: 0.3
+  random_state: 42
+
+# 部署配置
+deployment:
+  environment: "development"
+  enable_api_server: false
+  enable_input_validation: false  # 开发时跳过输入验证
+  max_data_size_mb: 100
